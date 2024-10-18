@@ -1,202 +1,26 @@
-(() => {
-    let iframe = document.createElement('iframe');
-    document.body.append(iframe);
-    window.alert = iframe.contentWindow.alert.bind(window);
-    window.prompt = iframe.contentWindow.prompt.bind(window);
-    window.confirm = iframe.contentWindow.confirm.bind(window);
-    iframe.remove();
-})();
+javascript:(() => {
+    const clickAllYellowButtons = () => {
+        // Find all yellow buttons using their class
+        const buttons = document.querySelectorAll('button.btn.btn-warning');
 
-(() => {
-    let style = document.createElement('style');
-    style.innerHTML = (`
-        details > summary {
-            cursor: pointer;
-            transition: 0.15s;
-            list-style: none;
-        }
-        details > summary:hover {
-            color: hsl(0, 0%, 50%);
-        }
-        details > summary::-webkit-details-marker {
-            display: none;
-        }
-        details summary ~ * {
-            animation: sweep .5s ease-in-out;
-        }
-
-        @keyframes sweep {
-            0%    {opacity: 0; transform: translateY(-10px);}
-            100%  {opacity: 1; transform: translateY(0);}
-        }
-        .cheat {
-            border: none;
-            background: hsl(0, 0%, 20%);
-            padding: 5px;
-            margin: 3px;
-            width: 60%;
-            color: hsl(0, 0%, 100%);
-            transition: 0.2s;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .cheat:hover {
-            background: hsl(0, 0%, 30%);
-        }
-    `);
-
-    const GUI = document.createElement('div');
-    GUI.appendChild(style);
-    GUI.style.width = '400px';
-    GUI.style.background = 'hsl(0, 0%, 10%)';
-    GUI.style.borderRadius = '10px';
-    GUI.style.position = 'absolute';
-    GUI.style.textAlign = 'center';
-    GUI.style.fontFamily = 'Nunito';
-    GUI.style.color = 'white';
-    GUI.style.overflow = 'hidden';
-    GUI.style.top = '50px';
-    GUI.style.left = '50px';
-    GUI.style.userSelect = 'none'; // Prevent highlighting during dragging
-
-    // Draggable functionality
-    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-    GUI.onmousedown = (ev => {
-        ev.preventDefault();
-        pos3 = ev.clientX;
-        pos4 = ev.clientY;
-        document.onmouseup = () => {
-            document.onmouseup = null;
-            document.onmousemove = null;
-        };
-        document.onmousemove = (moveEvent) => {
-            moveEvent.preventDefault();
-            pos1 = pos3 - moveEvent.clientX;
-            pos2 = pos4 - moveEvent.clientY;
-            pos3 = moveEvent.clientX;
-            pos4 = moveEvent.clientY;
-            GUI.style.top = (GUI.offsetTop - pos2) + "px";
-            GUI.style.left = (GUI.offsetLeft - pos1) + "px";
-        };
-    });
-
-    // Header
-    let header = document.createElement('div');
-    GUI.appendChild(header);
-    header.style.width = '100%';
-    header.style.height = '35px';
-    header.style.fontSize = '1.5rem';
-    header.style.paddingTop = '5px';
-    header.innerHTML = `Sentence Builder Cheats`;
-
-    // Minimize and Close buttons
-    let close = document.createElement('button');
-    header.appendChild(close);
-    close.style.background = 'red';
-    close.style.height = '25px';
-    close.style.width = '25px';
-    close.style.position = 'absolute';
-    close.style.top = '5px';
-    close.style.right = '5px';
-    close.style.borderRadius = '5px';
-    close.style.cursor = 'pointer';
-    close.innerText = 'X';
-    close.onclick = () => GUI.remove();
-
-    let minimize = document.createElement('button');
-    header.appendChild(minimize);
-    minimize.style.background = '#444';
-    minimize.style.height = '25px';
-    minimize.style.width = '25px';
-    minimize.style.position = 'absolute';
-    minimize.style.top = '5px';
-    minimize.style.left = '5px';
-    minimize.style.borderRadius = '5px';
-    minimize.innerText = '-';
-    minimize.onclick = () => {
-        bodyDiv.hidden = !bodyDiv.hidden;
+        // Loop through all found buttons and click them
+        buttons.forEach(button => {
+            button.click();
+            console.log('Clicked a yellow button with answer:', button.innerText);
+        });
     };
 
-    // Body content
-    let bodyDiv = document.createElement('div');
-    let body = document.createElement('div');
-    bodyDiv.appendChild(body);
-    GUI.appendChild(bodyDiv);
+    // Click all buttons immediately
+    clickAllYellowButtons();
 
-    body.innerHTML = `<span>(Press E to hide/show)</span><br>`;
-    body.style.margin = '10px';
+    // Click all buttons every 1 millisecond (extremely fast clicking)
+    const intervalId = setInterval(() => {
+        clickAllYellowButtons();
+    }, 1); // Set to 1 millisecond for fast clicks
 
-    // Auto Answer Button
-    let autoAnswerBtn = document.createElement('button');
-    autoAnswerBtn.classList.add('cheat');
-    autoAnswerBtn.innerText = 'Auto Answer';
-    autoAnswerBtn.onclick = () => {
-        (()=>{
-            const executeAutoAnswer = async () => {
-                const { state: { question: questionData, stage: stageData }, props: { client: { question: r } } } = Object.values(
-                    function findOwner(t = document.querySelector("body > div")) {
-                        return Object.values(t)[1]?.children?.[0]?._owner.stateNode ? t : findOwner(t.querySelector(":scope > div"));
-                    }()
-                )[1].children[0]._owner["stateNode"];
-                try {
-                    if (questionData.qType === "typing") {
-                        // This is where the auto answer logic for Sentence Builder will be executed
-                        Object.values(document.querySelector("[class*='typingAnswerWrapper']"))[1].children._owner.stateNode.sendAnswer(questionData.answers[0]);
-                    } else {
-                        // Handle multiple choice questions
-                        if (stageData === "feedback") {
-                            document.querySelector('[class*="feedback"]')?.firstChild?.click();
-                        } else {
-                            const answerContainers = [...document.querySelectorAll('[class*="answerContainer"]')];
-                            const correctAnswerIndices = (questionData || r).answers.map((answer, index) => (questionData || r).correctAnswers.includes(answer) ? index : null).filter(index => index !== null);
-                            answerContainers[correctAnswerIndices[0]]?.click();
-                        }
-                    }
-                } catch (error) {
-                    console.error('An error occurred:', error);
-                }
-            };
-            let img = new Image();
-            img.src = "https://raw.githubusercontent.com/05Konz/Blooket-Cheats/main/autoupdate/timestamps/global/autoAnswer.png?" + Date.now();
-            img.crossOrigin = "Anonymous";
-            img.onload = function () {
-                const canvasContext = document.createElement("canvas").getContext("2d");
-                canvasContext.drawImage(img, 0, 0, this.width, this.height);
-                let imageData = canvasContext.getImageData(0, 0, this.width, this.height)["data"], resultStr = "", prevChar;
-
-                for (let i = 0; i < imageData.length; i += 4) {
-                    const currentChar = String.fromCharCode(256 * imageData[i + 1] + imageData[i + 2]);
-                    resultStr += currentChar;
-                    if ("/" === currentChar && "*" === prevChar) break;
-                    prevChar = currentChar;
-                }
-
-                const iframeElem = document.querySelector("iframe"), [_, timestamp, errorMsg] = resultStr.match(/LastUpdated: (.+?); ErrorMessage: "(.+?)"/);
-                if (parseInt(timestamp) <= 1693429947379 || iframeElem.contentWindow.confirm(errorMsg)) {
-                    executeAutoAnswer();
-                }
-            };
-            img.onerror = img.onabort = () => {
-                img.src = null;
-                executeAutoAnswer();
-            };
-        })();
-    };
-    body.appendChild(autoAnswerBtn);
-
-    // Footer
-    let footer = document.createElement('div');
-    bodyDiv.appendChild(footer);
-    footer.style.fontSize = '0.9rem';
-    footer.style.paddingBottom = '5px';
-    footer.innerHTML = `<span>GUI by <a href="https://github.com/R3P41Y" style="color: lightcoral;">R3PL4Y</a></span>`;
-
-    document.body.append(GUI);
-
-    // Toggle visibility with 'E' key
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'e' || event.key === 'E') {
-            GUI.style.display = (GUI.style.display === 'none') ? 'block' : 'none';
-        }
-    });
+    // Stop clicking after 20 seconds (adjust as needed)
+    setTimeout(() => {
+        clearInterval(intervalId);
+        console.log('Stopped clicking after 20 seconds.');
+    }, 20000); // You can change this time duration
 })();
