@@ -1,2 +1,10 @@
-# Sentace-Builder-Auto-Answer
-This is a Sentence Builder Auto Answer tool made by R3PL4Y. This is fully Made by Me and should not be forked Or Stolen Without Given Credit
+## Usage
+
+To utilize the Auto Answer feature, follow these steps:
+
+1. **Copy the contents** of the Auto Answer script.
+2. **Open your browser's console**. You can typically access this by right-clicking on the webpage, selecting "Inspect," and navigating to the "Console" tab.
+3. **Paste the copied contents** into the console.
+4. Press **Enter** to execute the script.
+
+And voilà! The Auto Answer functionality will now be active.
